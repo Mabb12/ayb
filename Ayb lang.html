@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Айбийский язык · словарь и правила</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #f2efe8;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      padding: 2rem 1rem;
+      color: #1e1e2a;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #fffcf7;
+      border-radius: 2.5rem;
+      padding: 2rem 2rem;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+    }
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      border-bottom: 3px solid #d9d0c0;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.2rem;
+      color: #2c241a;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    h1 small {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #6b5f4e;
+      background: #ede8df;
+      padding: 0.2rem 1.2rem;
+      border-radius: 40px;
+      margin-left: 0.2rem;
+    }
+    h2 {
+      font-size: 1.9rem;
+      font-weight: 500;
+      margin: 2rem 0 0.8rem 0;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px dashed #d4cbbc;
+      color: #3d3225;
+    }
+    .alphabet-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1.2rem;
+      background: #faf7f0;
+      padding: 1rem 1.8rem;
+      border-radius: 3rem;
+      margin: 0.5rem 0 1.2rem 0;
+      font-size: 1.1rem;
+    }
+    .alphabet-grid span {
+      background: white;
+      padding: 0.2rem 0.9rem;
+      border-radius: 40px;
+      border: 1px solid #e6ddd0;
+    }
+    .alphabet-grid .letter { font-weight: 500; color: #1e1e2a; }
+    .alphabet-grid .sound { color: #6b5f4e; font-weight: 300; margin-left: 0.2rem; }
+
+    /* поиск */
+    .search-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.2rem;
+      align-items: center;
+      background: #f5f1e9;
+      padding: 0.6rem 1.8rem;
+      border-radius: 60px;
+      margin: 0.2rem 0 1.2rem 0;
+    }
+    .search-wrap label {
+      font-weight: 500;
+      color: #3d3225;
+    }
+    .search-wrap input {
+      flex: 1 1 260px;
+      padding: 0.6rem 1.2rem;
+      border: 1px solid #d6cdbc;
+      border-radius: 60px;
+      font-size: 1rem;
+      background: white;
+      outline: none;
+      transition: 0.2s;
+    }
+    .search-wrap input:focus {
+      border-color: #a5927a;
+      box-shadow: 0 0 0 3px rgba(165, 146, 122, 0.2);
+    }
+    .search-wrap .clear-btn {
+      background: #d6cdbc;
+      border: none;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 500;
+      color: #2c241a;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .search-wrap .clear-btn:hover { background: #c4b8a4; }
+
+    .letter-block {
+      margin-top: 1.8rem;
+    }
+    .letter-title {
+      font-size: 2rem;
+      font-weight: 400;
+      background: #e5ddcf;
+      display: inline-block;
+      padding: 0.1rem 1.4rem;
+      border-radius: 60px;
+      letter-spacing: 0.05em;
+      color: #2a241c;
+      margin-bottom: 0.5rem;
+    }
+    .dict-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 0.2rem 0.8rem;
+      background: #fcfaf6;
+      padding: 0.8rem 1.2rem;
+      border-radius: 1.8rem;
+      border: 1px solid #eae2d6;
+      margin-top: 0.2rem;
+    }
+    .dict-entry {
+      display: flex;
+      align-items: baseline;
+      gap: 0.3rem;
+      padding: 0.2rem 0.1rem;
+      border-bottom: 1px dotted #e2d9cb;
+      font-size: 0.98rem;
+    }
+    .dict-entry .word {
+      font-weight: 550;
+      color: #1f2a36;
+      min-width: 4.2rem;
+    }
+    .dict-entry .def {
+      color: #3d3a33;
+    }
+    .dict-entry .def i {
+      color: #7b6e5a;
+      font-style: italic;
+    }
+
+    /* правила */
+    .rule-box {
+      background: #f2ede4;
+      border-radius: 1.8rem;
+      padding: 1.5rem 2rem;
+      margin: 1.8rem 0 0.8rem 0;
+    }
+    .rule-box ol {
+      list-style: none;
+      counter-reset: rule-counter;
+      padding-left: 0.5rem;
+    }
+    .rule-box ol li {
+      counter-increment: rule-counter;
+      margin-bottom: 1rem;
+      padding-left: 2.8rem;
+      position: relative;
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+    .rule-box ol li::before {
+      content: counter(rule-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-weight: 600;
+      background: #d6cdbc;
+      color: #2d241b;
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+    .rule-example {
+      background: #faf7f0;
+      padding: 0.3rem 1.2rem;
+      border-radius: 30px;
+      display: inline-block;
+      margin-top: 0.2rem;
+      font-family: 'Courier New', monospace;
+      border: 1px solid #d4cbbc;
+      color: #1f2a36;
+    }
+    .highlight {
+      background: #e7dfd2;
+      padding: 0.1rem 0.4rem;
+      border-radius: 12px;
+      font-weight: 500;
+    }
+    .note {
+      background: #f3efe8;
+      padding: 0.8rem 1.5rem;
+      border-radius: 40px;
+      margin-top: 1.8rem;
+      border-left: 4px solid #b8aa94;
+      color: #3f382e;
+    }
+    .no-result {
+      padding: 0.8rem 1.2rem;
+      background: #f3ede4;
+      border-radius: 40px;
+      color: #4d4030;
+      font-style: italic;
+      display: none;
+    }
+    footer {
+      margin-top: 2.8rem;
+      text-align: right;
+      font-size: 0.9rem;
+      color: #877b69;
+      border-top: 1px solid #e0d6c6;
+      padding-top: 1.2rem;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 1.2rem; }
+      .dict-section { grid-template-columns: 1fr; }
+      .search-wrap input { flex: 1 1 100%; }
+    }
+  </style>
+</head>
+<body>
+<div class="container" id="app">
+
+  <h1>
+    Айбийский <small>алфавит · словарь · правила</small>
+  </h1>
+  <p style="margin: -0.2rem 0 0.8rem 0.5rem; font-size: 0.95rem; color: #5f5342;">
+    <strong>Стандарт письма — латиница</strong> (кириллица допустима, но не стандарт)
+  </p>
+
+  <!-- АЛФАВИТ -->
+  <h2>🅰️ Алфавит</h2>
+  <div class="alphabet-grid">
+    <span><span class="letter">a</span> <span class="sound">а</span></span>
+    <span><span class="letter">p</span> <span class="sound">п</span></span>
+    <span><span class="letter">s</span> <span class="sound">с</span></span>
+    <span><span class="letter">e</span> <span class="sound">э</span></span>
+    <span><span class="letter">f</span> <span class="sound">ф</span></span>
+    <span><span class="letter">i</span> <span class="sound">и</span></span>
+    <span><span class="letter">k</span> <span class="sound">к</span></span>
+    <span><span class="letter">l</span> <span class="sound">л</span></span>
+    <span><span class="letter">m</span> <span class="sound">м</span></span>
+    <span><span class="letter">n</span> <span class="sound">н</span></span>
+    <span><span class="letter">o</span> <span class="sound">о</span></span>
+    <span><span class="letter">h</span> <span class="sound">ш</span></span>
+    <span><span class="letter">j</span> <span class="sound">й</span></span>
+    <span><span class="letter">t</span> <span class="sound">т</span></span>
+    <span><span class="letter">u</span> <span class="sound">у</span></span>
+    <span><span class="letter">r</span> <span class="sound">р</span></span>
+  </div>
+
+  <!-- ПОИСК -->
+  <div class="search-wrap">
+    <label for="searchInput">🔍 Поиск</label>
+    <input type="text" id="searchInput" placeholder="введите слово или перевод..." @input="filterDict" autofocus>
+    <button class="clear-btn" @click="clearSearch">✕ очистить</button>
+    <span style="font-size:0.9rem; color:#6b5f4e;" id="resultCount"></span>
+  </div>
+  <div id="noResultMsg" class="no-result">😕 ничего не найдено</div>
+
+  <!-- СЛОВАРЬ (ВСЕ БУКВЫ) -->
+  <h2>📖 Словарь</h2>
+
+  <!-- Блок A -->
+  <div class="letter-block" data-letter="a">
+    <div class="letter-title">A</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">a</span><span class="def">частица образования глаголов</span></div>
+      <div class="dict-entry"><span class="word">ama</span><span class="def">я, мой</span></div>
+      <div class="dict-entry"><span class="word">ala / ola</span><span class="def">все / всё</span></div>
+      <div class="dict-entry"><span class="word">an</span><span class="def">граница, край</span></div>
+      <div class="dict-entry"><span class="word">anteso</span><span class="def">рептилия</span></div>
+      <div class="dict-entry"><span class="word">afi</span><span class="def">завтра, будущее, потом</span></div>
+      <div class="dict-entry"><span class="word">alo</span><span class="def">день</span></div>
+      <div class="dict-entry"><span class="word">alatu</span><span class="def">мир, друг, дружный, мирный</span></div>
+      <div class="dict-entry"><span class="word">alon</span><span class="def">должен, обязан</span></div>
+      <div class="dict-entry"><span class="word">atru</span><span class="def">правда</span></div>
+      <div class="dict-entry"><span class="word">afan</span><span class="def">белый, светлый</span></div>
+      <div class="dict-entry"><span class="word">asoluta</span><span class="def">абсолютный</span></div>
+    </div>
+  </div>
+
+  <!-- P -->
+  <div class="letter-block" data-letter="p">
+    <div class="letter-title">P</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">piha</span><span class="def">предмет, материя</span></div>
+      <div class="dict-entry"><span class="word">poko</span><span class="def">вода, жидкость, жидкий, мокрый</span></div>
+      <div class="dict-entry"><span class="word">pokoj</span><span class="def">скопление, водоём</span></div>
+      <div class="dict-entry"><span class="word">puri</span><span class="def">растение, ухаживать</span></div>
+      <div class="dict-entry"><span class="word">pijata</span><span class="def">масло, скользкий</span></div>
+      <div class="dict-entry"><span class="word">pika</span><span class="def">насекомое, членистоногое</span></div>
+      <div class="dict-entry"><span class="word">pofa</span><span class="def">рыба</span></div>
+      <div class="dict-entry"><span class="word">pufu</span><span class="def">мужик, мужской</span></div>
+      <div class="dict-entry"><span class="word">pafalo</span><span class="def">путь, доктрина, дорога</span></div>
+      <div class="dict-entry"><span class="word">paj</span><span class="def">боль, болезненный, причинять боль / бить</span></div>
+      <div class="dict-entry"><span class="word">poja</span><span class="def">ёмкость, чаша, контейнер, крушка</span></div>
+      <div class="dict-entry"><span class="word">panu</span><span class="def">зерно, хлеб</span></div>
+      <div class="dict-entry"><span class="word">pifana</span><span class="def">чувствовать, чувство</span></div>
+      <div class="dict-entry"><span class="word">pikule</span><span class="def">цвет, красить</span></div>
+      <div class="dict-entry"><span class="word">purata</span><span class="def">порошок, раздробленный, пыль, крошки</span></div>
+      <div class="dict-entry"><span class="word">pikoja</span><span class="def">ломать, сломанный</span></div>
+      <div class="dict-entry"><span class="word">para</span><span class="def">быть</span></div>
+      <div class="dict-entry"><span class="word">puta</span><span class="def">класть, помещать</span></div>
+      <div class="dict-entry"><span class="word">pilaja</span><span class="def">спокойный</span></div>
+      <div class="dict-entry"><span class="word">pulu</span><span class="def">искать, охотится, собирать, добывать</span></div>
+      <div class="dict-entry"><span class="word">piro</span><span class="def">про, о</span></div>
+      <div class="dict-entry"><span class="word">por</span><span class="def">для, за</span></div>
+    </div>
+  </div>
+
+  <!-- S -->
+  <div class="letter-block" data-letter="s">
+    <div class="letter-title">S</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">su</span><span class="def">человек</span></div>
+      <div class="dict-entry"><span class="word">sep</span><span class="def">земля, место, территория</span></div>
+      <div class="dict-entry"><span class="word">sako</span><span class="def">камень, твердый</span></div>
+      <div class="dict-entry"><span class="word">solu</span><span class="def">металл</span></div>
+      <div class="dict-entry"><span class="word">sofel</span><span class="def">млекопитающее, животное</span></div>
+      <div class="dict-entry"><span class="word">sanilo</span><span class="def">магазин, обменять</span></div>
+      <div class="dict-entry"><span class="word">senana</span><span class="def">цена, стоимость</span></div>
+      <div class="dict-entry"><span class="word">sukola</span><span class="def">звук, шуметь</span></div>
+      <div class="dict-entry"><span class="word">selar</span><span class="def">звезда</span></div>
+      <div class="dict-entry"><span class="word">suno</span><span class="def">солнце</span></div>
+      <div class="dict-entry"><span class="word">soru</span><span class="def">болезнь, вирус</span></div>
+      <div class="dict-entry"><span class="word">sofa</span><span class="def">глина, мягкий материал, пластилин</span></div>
+      <div class="dict-entry"><span class="word">sanla</span><span class="def">сын, дочь</span></div>
+      <div class="dict-entry"><span class="word">sefi</span><span class="def">имя, название</span></div>
+      <div class="dict-entry"><span class="word">sufi</span><span class="def">сладкий, милый, очаровательный</span></div>
+      <div class="dict-entry"><span class="word">siro</span><span class="def">слово</span></div>
+      <div class="dict-entry"><span class="word">suho</span><span class="def">поверхность</span></div>
+      <div class="dict-entry"><span class="word">seji</span><span class="def">вопрос</span></div>
+      <div class="dict-entry"><span class="word">senja</span><span class="def">доска, бревно</span></div>
+      <div class="dict-entry"><span class="word">sikou</span><span class="def">очередь, поток</span></div>
+      <div class="dict-entry"><span class="word">sata</span><span class="def">тактика, стратегия</span></div>
+      <div class="dict-entry"><span class="word">siri</span><span class="def">сон, спать</span></div>
+      <div class="dict-entry"><span class="word">sihu</span><span class="def">творение, искусство, делать</span></div>
+      <div class="dict-entry"><span class="word">sulo</span><span class="def">большой, важный</span></div>
+      <div class="dict-entry"><span class="word">senla</span><span class="def">сильный, энергия, сильно, сила</span></div>
+      <div class="dict-entry"><span class="word">soli</span><span class="def">кислый</span></div>
+      <div class="dict-entry"><span class="word">sina</span><span class="def">ты, твой, тебе</span></div>
+      <div class="dict-entry"><span class="word">saluta</span><span class="def">слава, почет</span></div>
+    </div>
+  </div>
+
+  <!-- E -->
+  <div class="letter-block" data-letter="e">
+    <div class="letter-title">E</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">ekija</span><span class="def">хрупкий, керамика</span></div>
+      <div class="dict-entry"><span class="word">epiku</span><span class="def">эпичный</span></div>
+      <div class="dict-entry"><span class="word">eret</span><span class="def">чисто, стерильный</span></div>
+      <div class="dict-entry"><span class="word">e</span><span class="def">союз и, союз а</span></div>
+    </div>
+  </div>
+
+  <!-- F -->
+  <div class="letter-block" data-letter="f">
+    <div class="letter-title">F</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">futo</span><span class="def">еда, поглощать</span></div>
+      <div class="dict-entry"><span class="word">funki</span><span class="def">гриб</span></div>
+      <div class="dict-entry"><span class="word">furato</span><span class="def">брат, сестра</span></div>
+      <div class="dict-entry"><span class="word">fana</span><span class="def">хотеть, желание</span></div>
+      <div class="dict-entry"><span class="word">fipi</span><span class="def">женщина, женский</span></div>
+      <div class="dict-entry"><span class="word">fufu</span><span class="def">ворсистый, вата, мех</span></div>
+      <div class="dict-entry"><span class="word">finka</span><span class="def">палец, клешня, щепоть</span></div>
+      <div class="dict-entry"><span class="word">fame</span><span class="def">семья, группа</span></div>
+      <div class="dict-entry"><span class="word">faja</span><span class="def">погода, атмосфера, температура</span></div>
+      <div class="dict-entry"><span class="word">foja</span><span class="def">вес</span></div>
+      <div class="dict-entry"><span class="word">fare</span><span class="def">красный</span></div>
+      <div class="dict-entry"><span class="word">fijo</span><span class="def">фиолетовый, розовый</span></div>
+      <div class="dict-entry"><span class="word">fifo</span><span class="def">смысл, почему, зачем</span></div>
+      <div class="dict-entry"><span class="word">firo</span><span class="def">в, внутри</span></div>
+      <div class="dict-entry"><span class="word">fitelo</span><span class="def">глаз, смотреть</span></div>
+      <div class="dict-entry"><span class="word">filemo</span><span class="def">фильм, видео, мультик</span></div>
+    </div>
+  </div>
+
+  <!-- I -->
+  <div class="letter-block" data-letter="i">
+    <div class="letter-title">I</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">ifi</span><span class="def">сегодня, сейчас</span></div>
+      <div class="dict-entry"><span class="word">ilo</span><span class="def">инструмент, машина</span></div>
+      <div class="dict-entry"><span class="word">isa</span><span class="def">ответ, ответный</span></div>
+      <div class="dict-entry"><span class="word">ifes</span><span class="def">если</span></div>
+    </div>
+  </div>
+
+  <!-- K -->
+  <div class="letter-block" data-letter="k">
+    <div class="letter-title">K</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">ku</span><span class="def">приветствие</span></div>
+      <div class="dict-entry"><span class="word">kisu</span><span class="def">история, список</span></div>
+      <div class="dict-entry"><span class="word">kij</span><span class="def">отражение</span></div>
+      <div class="dict-entry"><span class="word">kaj</span><span class="def">власть, главный</span></div>
+      <div class="dict-entry"><span class="word">kotaja</span><span class="def">верх, верхний, высокий, великий</span></div>
+      <div class="dict-entry"><span class="word">kotela</span><span class="def">небо, космос, космический</span></div>
+      <div class="dict-entry"><span class="word">kap</span><span class="def">голова, мозг</span></div>
+      <div class="dict-entry"><span class="word">kilo</span><span class="def">овощ</span></div>
+      <div class="dict-entry"><span class="word">kora</span><span class="def">удача, повезло</span></div>
+      <div class="dict-entry"><span class="word">ko</span><span class="def">контекст</span></div>
+      <div class="dict-entry"><span class="word">kinja</span><span class="def">осадки</span></div>
+      <div class="dict-entry"><span class="word">kohe</span><span class="def">здесь</span></div>
+      <div class="dict-entry"><span class="word">kute</span><span class="def">ухо, слышать, подчинятся</span></div>
+      <div class="dict-entry"><span class="word">kula</span><span class="def">класс, вид</span></div>
+      <div class="dict-entry"><span class="word">kila</span><span class="def">полезный, витамин</span></div>
+      <div class="dict-entry"><span class="word">koko</span><span class="def">специи, пряный</span></div>
+      <div class="dict-entry"><span class="word">kou</span><span class="def">идти, движущийся</span></div>
+      <div class="dict-entry"><span class="word">ken</span><span class="def">мочь, уметь</span></div>
+      <div class="dict-entry"><span class="word">kifi</span><span class="def">брать</span></div>
+      <div class="dict-entry"><span class="word">keken</span><span class="def">используя, использовать</span></div>
+      <div class="dict-entry"><span class="word">kalami</span><span class="def">вызывать, звать, звонить, телефон</span></div>
+      <div class="dict-entry"><span class="word">kusipe</span><span class="def">касаться</span></div>
+      <div class="dict-entry"><span class="word">kuta</span><span class="def">хороший, вкусный</span></div>
+      <div class="dict-entry"><span class="word">kaso</span><span class="def">странный, пьяный</span></div>
+      <div class="dict-entry"><span class="word">kun</span><span class="def">с, вместе</span></div>
+      <div class="dict-entry"><span class="word">kolekon</span><span class="def">коллекция, собирать, накапливать</span></div>
+    </div>
+  </div>
+
+  <!-- L -->
+  <div class="letter-block" data-letter="l">
+    <div class="letter-title">L</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">laketa</span><span class="def">молоко</span></div>
+      <div class="dict-entry"><span class="word">lihi</span><span class="def">лёд, холодный</span></div>
+      <div class="dict-entry"><span class="word">lakaj</span><span class="def">говорить, речь, язык</span></div>
+      <div class="dict-entry"><span class="word">lej</span><span class="def">одежда, ткань</span></div>
+      <div class="dict-entry"><span class="word">likan</span><span class="def">дух, духовный, религия, бог</span></div>
+      <div class="dict-entry"><span class="word">luka</span><span class="def">рука, горсть</span></div>
+      <div class="dict-entry"><span class="word">lipenta</span><span class="def">свобода, свободный</span></div>
+      <div class="dict-entry"><span class="word">lifu</span><span class="def">знак, показывать</span></div>
+      <div class="dict-entry"><span class="word">lata</span><span class="def">холм, гора, возвышенность</span></div>
+      <div class="dict-entry"><span class="word">leta</span><span class="def">нос, запах</span></div>
+      <div class="dict-entry"><span class="word">lujan</span><span class="def">волос, веревка, кривой</span></div>
+      <div class="dict-entry"><span class="word">leti</span><span class="def">позволять, право</span></div>
+      <div class="dict-entry"><span class="word">lipita</span><span class="def">потерять</span></div>
+      <div class="dict-entry"><span class="word">lipa</span><span class="def">любовь, любить, уважать</span></div>
+      <div class="dict-entry"><span class="word">lapa</span><span class="def">захватывать, воровать</span></div>
+      <div class="dict-entry"><span class="word">lisi</span><span class="def">маленький, незначительный</span></div>
+      <div class="dict-entry"><span class="word">lotu</span><span class="def">много</span></div>
+      <div class="dict-entry"><span class="word">lasi</span><span class="def">зеленый</span></div>
+      <div class="dict-entry"><span class="word">lili</span><span class="def">счастье, радость, счастливый</span></div>
+      <div class="dict-entry"><span class="word">leje</span><span class="def">клей, липкий, соединять</span></div>
+      <div class="dict-entry"><span class="word">li</span><span class="def">частица, обозначающая прилагательное</span></div>
+    </div>
+  </div>
+
+  <!-- M -->
+  <div class="letter-block" data-letter="m">
+    <div class="letter-title">M</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">mene</span><span class="def">транспорт</span></div>
+      <div class="dict-entry"><span class="word">mun</span><span class="def">луна, планета, космический объект</span></div>
+      <div class="dict-entry"><span class="word">mak</span><span class="def">секунда, мгновение</span></div>
+      <div class="dict-entry"><span class="word">man</span><span class="def">середина, центр, живот</span></div>
+      <div class="dict-entry"><span class="word">mojata</span><span class="def">деньги, валюта</span></div>
+      <div class="dict-entry"><span class="word">morto</span><span class="def">смерть, убивать, умереть</span></div>
+      <div class="dict-entry"><span class="word">maj</span><span class="def">родитель</span></div>
+      <div class="dict-entry"><span class="word">mojo</span><span class="def">бумага, договор, документ, статья, доказывать</span></div>
+      <div class="dict-entry"><span class="word">mija</span><span class="def">лекарство, лечить</span></div>
+      <div class="dict-entry"><span class="word">miki</span><span class="def">ягода</span></div>
+      <div class="dict-entry"><span class="word">muku</span><span class="def">знание, знать</span></div>
+      <div class="dict-entry"><span class="word">mapu</span><span class="def">боб, семя</span></div>
+      <div class="dict-entry"><span class="word">monsuta</span><span class="def">монстр, бояться, страшный</span></div>
+      <div class="dict-entry"><span class="word">un/tu/ja/eta/unta/fa/ka/ho/ke/kitau</span><span class="def">числа (1, объедененный/2/3/5/10/20/50/100/500/1000)</span></div>
+      <div class="dict-entry"><span class="word">mo</span><span class="def">самый, превосходная степень, превосходство</span></div>
+      <div class="dict-entry"><span class="word">munto</span><span class="def">мир, вселенная</span></div>
+      <div class="dict-entry"><span class="word">mofo</span><span class="def">действие</span></div>
+      <div class="dict-entry"><span class="word">manjo</span><span class="def">делаться, становится</span></div>
+      <div class="dict-entry"><span class="word">mota</span><span class="def">толкать, заставлять</span></div>
+      <div class="dict-entry"><span class="word">monta</span><span class="def">сидеть</span></div>
+      <div class="dict-entry"><span class="word">musi</span><span class="def">весёлый, артистичный</span></div>
+    </div>
+  </div>
+
+  <!-- N -->
+  <div class="letter-block" data-letter="n">
+    <div class="letter-title">N</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">noku</span><span class="def">нога</span></div>
+      <div class="dict-entry"><span class="word">nete</span><span class="def">интернет</span></div>
+      <div class="dict-entry"><span class="word">nati</span><span class="def">другой, разный, чужеземец</span></div>
+      <div class="dict-entry"><span class="word">notu</span><span class="def">круглый, цикл, шар, точка</span></div>
+      <div class="dict-entry"><span class="word">nalo</span><span class="def">форма, свойство</span></div>
+      <div class="dict-entry"><span class="word">nana</span><span class="def">цифра, номер</span></div>
+      <div class="dict-entry"><span class="word">niru</span><span class="def">событие, праздник</span></div>
+      <div class="dict-entry"><span class="word">nefa</span><span class="def">иметь, носить</span></div>
+      <div class="dict-entry"><span class="word">nom</span><span class="def">стоять, вставать, оборонять</span></div>
+      <div class="dict-entry"><span class="word">nepo</span><span class="def">закрыть</span></div>
+      <div class="dict-entry"><span class="word">nese</span><span class="def">слабый, усталый</span></div>
+      <div class="dict-entry"><span class="word">neja</span><span class="def">новый, юнец</span></div>
+      <div class="dict-entry"><span class="word">noji</span><span class="def">никогда</span></div>
+      <div class="dict-entry"><span class="word">not</span><span class="def">нет, не, отрицание, ноль</span></div>
+      <div class="dict-entry"><span class="word">nor</span><span class="def">но</span></div>
+      <div class="dict-entry"><span class="word">neko</span><span class="def">следующий</span></div>
+      <div class="dict-entry"><span class="word">nema</span><span class="def">никто</span></div>
+    </div>
+  </div>
+
+  <!-- O -->
+  <div class="letter-block" data-letter="o">
+    <div class="letter-title">O</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">ofita</span><span class="def">вчера, прошлое</span></div>
+      <div class="dict-entry"><span class="word">oliki</span><span class="def">фрукт, плод</span></div>
+      <div class="dict-entry"><span class="word">osu</span><span class="def">скелет, зуб, кость</span></div>
+      <div class="dict-entry"><span class="word">osut</span><span class="def">осужденный, преступник, хаос</span></div>
+      <div class="dict-entry"><span class="word">open</span><span class="def">открыть</span></div>
+      <div class="dict-entry"><span class="word">ora</span><span class="def">коричневый</span></div>
+      <div class="dict-entry"><span class="word">opi</span><span class="def">он, она, оно, ему</span></div>
+      <div class="dict-entry"><span class="word">okij</span><span class="def">перед</span></div>
+    </div>
+  </div>
+
+  <!-- H -->
+  <div class="letter-block" data-letter="h">
+    <div class="letter-title">H</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">holu</span><span class="def">огонь, горячий, теплый</span></div>
+      <div class="dict-entry"><span class="word">hela</span><span class="def">оболочка, чехол</span></div>
+      <div class="dict-entry"><span class="word">hanaj</span><span class="def">флаг, рисунок, рисовать</span></div>
+      <div class="dict-entry"><span class="word">holo</span><span class="def">грустный, грусть, бедный</span></div>
+      <div class="dict-entry"><span class="word">ha</span><span class="def">или</span></div>
+      <div class="dict-entry"><span class="word">huhu</span><span class="def">как</span></div>
+      <div class="dict-entry"><span class="word">hun</span><span class="def">потому, поэтому</span></div>
+    </div>
+  </div>
+
+  <!-- J -->
+  <div class="letter-block" data-letter="j">
+    <div class="letter-title">J</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">jon</span><span class="def">игра, играть</span></div>
+      <div class="dict-entry"><span class="word">jan</span><span class="def">причина, из-за</span></div>
+      <div class="dict-entry"><span class="word">joru</span><span class="def">работа, работать</span></div>
+      <div class="dict-entry"><span class="word">jonata</span><span class="def">мебель</span></div>
+      <div class="dict-entry"><span class="word">joken</span><span class="def">попробовать, пытаться, попытка</span></div>
+      <div class="dict-entry"><span class="word">jonina</span><span class="def">резина, тянуть</span></div>
+      <div class="dict-entry"><span class="word">jelo</span><span class="def">желтый, оранжевый</span></div>
+      <div class="dict-entry"><span class="word">jen</span><span class="def">старый, устаревший</span></div>
+      <div class="dict-entry"><span class="word">jop</span><span class="def">ой, упс</span></div>
+    </div>
+  </div>
+
+  <!-- T -->
+  <div class="letter-block" data-letter="t">
+    <div class="letter-title">T</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">tupa</span><span class="def">воздух, газ</span></div>
+      <div class="dict-entry"><span class="word">tam</span><span class="def">время</span></div>
+      <div class="dict-entry"><span class="word">tau</span><span class="def">год</span></div>
+      <div class="dict-entry"><span class="word">tafu</span><span class="def">жизнь, жить</span></div>
+      <div class="dict-entry"><span class="word">tol</span><span class="def">часть, разделять</span></div>
+      <div class="dict-entry"><span class="word">tomo</span><span class="def">здание, комната</span></div>
+      <div class="dict-entry"><span class="word">toluj</span><span class="def">организм, механизм</span></div>
+      <div class="dict-entry"><span class="word">telin</span><span class="def">волшебство, волшебный, чудо</span></div>
+      <div class="dict-entry"><span class="word">tokula</span><span class="def">низ, низкий, зависимый</span></div>
+      <div class="dict-entry"><span class="word">tulosa</span><span class="def">закон, закономерность, правило</span></div>
+      <div class="dict-entry"><span class="word">tosa</span><span class="def">отверстие, окно, дверь</span></div>
+      <div class="dict-entry"><span class="word">tume</span><span class="def">дым, пар, дух</span></div>
+      <div class="dict-entry"><span class="word">tuma</span><span class="def">думать, понимать, выдумка</span></div>
+      <div class="dict-entry"><span class="word">tero</span><span class="def">отходы, мусор, грязный, отвратительный</span></div>
+      <div class="dict-entry"><span class="word">topo</span><span class="def">забор, блокировать, блокирующий</span></div>
+      <div class="dict-entry"><span class="word">tusana</span><span class="def">цепь, взаимосвязанный</span></div>
+      <div class="dict-entry"><span class="word">teje</span><span class="def">источник, родник</span></div>
+      <div class="dict-entry"><span class="word">teha</span><span class="def">абстракция</span></div>
+      <div class="dict-entry"><span class="word">terin</span><span class="def">теория, предположение</span></div>
+      <div class="dict-entry"><span class="word">turu</span><span class="def">дать, отправлять, излучать, подарок, награда</span></div>
+      <div class="dict-entry"><span class="word">talu</span><span class="def">помогать, исправлять</span></div>
+      <div class="dict-entry"><span class="word">tuko</span><span class="def">плохой, горький</span></div>
+      <div class="dict-entry"><span class="word">tan</span><span class="def">одинаковый, стандартный, обычный, нормальный</span></div>
+      <div class="dict-entry"><span class="word">tali</span><span class="def">мало, нищий</span></div>
+      <div class="dict-entry"><span class="word">tafan</span><span class="def">серый</span></div>
+      <div class="dict-entry"><span class="word">tafala</span><span class="def">черный, темный</span></div>
+      <div class="dict-entry"><span class="word">tuluka</span><span class="def">дикий, сумасшедший</span></div>
+      <div class="dict-entry"><span class="word">tof</span><span class="def">это, тот</span></div>
+      <div class="dict-entry"><span class="word">tes</span><span class="def">да</span></div>
+      <div class="dict-entry"><span class="word">tok</span><span class="def">какой</span></div>
+      <div class="dict-entry"><span class="word">ta</span><span class="def">только, лишь</span></div>
+      <div class="dict-entry"><span class="word">tenso</span><span class="def">плотность</span></div>
+      <div class="dict-entry"><span class="word">tustoni</span><span class="def">распределять, рассеивать</span></div>
+    </div>
+  </div>
+
+  <!-- U -->
+  <div class="letter-block" data-letter="u">
+    <div class="letter-title">U</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">uka</span><span class="def">прощание</span></div>
+      <div class="dict-entry"><span class="word">ruta</span><span class="def">рот, ротовая полость, целовать, сосать</span></div>
+      <div class="dict-entry"><span class="word">uaso</span><span class="def">птица, летающее существо</span></div>
+      <div class="dict-entry"><span class="word">urif</span><span class="def">заточение, поработить</span></div>
+      <div class="dict-entry"><span class="word">ukuma</span><span class="def">глупый</span></div>
+      <div class="dict-entry"><span class="word">uj</span><span class="def">угол, копье</span></div>
+      <div class="dict-entry"><span class="word">utala</span><span class="def">война, битва, атаковать, агрессивный</span></div>
+      <div class="dict-entry"><span class="word">unu</span><span class="def">блок, квадрат</span></div>
+      <div class="dict-entry"><span class="word">ulu</span><span class="def">пирамида, треугольник</span></div>
+      <div class="dict-entry"><span class="word">unapa</span><span class="def">размножаться, сексуальный</span></div>
+      <div class="dict-entry"><span class="word">usaja</span><span class="def">зародыш, эмбрион, набросок</span></div>
+      <div class="dict-entry"><span class="word">uplu</span><span class="def">голубой, синий</span></div>
+      <div class="dict-entry"><span class="word">urta</span><span class="def">ложь</span></div>
+      <div class="dict-entry"><span class="word">untokan</span><span class="def">сжимать, сжиматься, сжатый</span></div>
+    </div>
+  </div>
+
+  <!-- R -->
+  <div class="letter-block" data-letter="r">
+    <div class="letter-title">R</div>
+    <div class="dict-section">
+      <div class="dict-entry"><span class="word">rapu</span><span class="def">палка, прямой</span></div>
+      <div class="dict-entry"><span class="word">rapuja</span><span class="def">труба, полая палка, пещера, тоннель</span></div>
+      <div class="dict-entry"><span class="word">rati</span><span class="def">смешной, шутка</span></div>
+      <div class="dict-entry"><span class="word">ruhe</span><span class="def">что</span></div>
+      <div class="dict-entry"><span class="word">rento</span><span class="def">расширятся, развиваться</span></div>
+      <div class="dict-entry"><span class="word">resti</span><span class="def">оставаться, оставить, оставленный</span></div>
+    </div>
+  </div>
+
+  <!-- ПРАВИЛА -->
+  <h2>📐 Правила</h2>
+  <div class="rule-box">
+    <ol>
+      <li><strong>Множественное число</strong> — удвоение слова через дефис: <span class="rule-example">su-su</span> (люди).</li>
+      <li><strong>Порядок слов SVO</strong> (существительное + глагол + дополнение). <br> <span class="rule-example">ama a para su li kuta</span> — я являюсь хорошим человеком.</li>
+      <li><strong>Заглавная буква</strong> только у омонимов / имён: <span class="rule-example">Ruti kun Nikalaja</span> (Руди с Николаем).</li>
+      <li><strong>Ударение</strong> всегда на предпоследний слог (исключение — рифма).</li>
+      <li><strong>Частица <span class="highlight">a</span></strong> перед глаголом. <br> <span class="rule-example">sina a para su</span> — ты являешься человеком. Без <span class="highlight">a</span> — существительное.</li>
+      <li><strong>Частица <span class="highlight">li</span></strong> перед прилагательным. <br> <span class="rule-example">su li kuta a sifu mofo li kuta</span> — хороший человек делает хорошие действия.</li>
+    </ol>
+  </div>
+
+  <div class="note">
+    <strong>✎</strong> Полный словарь, алфавит и правила. <strong>Латиница — стандарт</strong>, кириллица допустима.
+  </div>
+
+  <footer>
+    Айбийский язык · версия 2.0
+  </footer>
+</div>
+
+<script>
+  (function() {
+    // поиск
+    const searchInput = document.getElementById('searchInput');
+    const noResult = document.getElementById('noResultMsg');
+    const resultCount = document.getElementById('resultCount');
+    const allEntries = document.querySelectorAll('.dict-entry');
+    const allBlocks = document.querySelectorAll('.letter-block');
+
+    function filterDict() {
+      const query = searchInput.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      allEntries.forEach(entry => {
+        const word = entry.querySelector('.word')?.textContent?.toLowerCase() || '';
+        const def = entry.querySelector('.def')?.textContent?.toLowerCase() || '';
+        const match = word.includes(query) || def.includes(query);
+        entry.style.display = match ? 'flex' : 'none';
+        if (match) visibleCount++;
+      });
+
+      // показываем / скрываем блоки если в них нет видимых записей
+      allBlocks.forEach(block => {
+        const entries = block.querySelectorAll('.dict-entry');
+        let hasVisible = false;
+        entries.forEach(e => { if (e.style.display !== 'none') hasVisible = true; });
+        block.style.display = hasVisible ? 'block' : 'none';
+      });
+
+      // сообщение если ничего не найдено
+      if (visibleCount === 0 && query.length > 0) {
+        noResult.style.display = 'block';
+      } else {
+        noResult.style.display = 'none';
+      }
+
+      resultCount.textContent = query.length > 0 ? `найдено ${visibleCount}` : '';
+    }
+
+    function clearSearch() {
+      searchInput.value = '';
+      filterDict();
+      searchInput.focus();
+    }
+
+    // привязать к глобальному объекту для использования в onclick
+    window.filterDict = filterDict;
+    window.clearSearch = clearSearch;
+
+    searchInput.addEventListener('input', filterDict);
+    // начальный сброс
+    filterDict();
+  })();
+</script>
+</body>
+</html>
